@@ -1,6 +1,5 @@
 package org.jobrunr.examples.processingapp;
 
-import org.jobrunr.examples.JobRunrStorageConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;

@@ -4,10 +4,13 @@ import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.jobs.context.JobDashboardProgressBar;
 import org.jobrunr.jobs.context.JobRunrDashboardLogger;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.spring.annotations.Recurring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 /**
  * This is a simple spring service
@@ -23,8 +26,14 @@ public class MyService implements MyServiceInterface {
         System.out.println("Doing some work without arguments");
     }
 
-    public void doSimpleJob(String anArgument) {
-        System.out.println("Doing some work: " + anArgument);
+    public void handleJob(JobEntity entity) {
+        if (entity.getAlias().equalsIgnoreCase("fail_job")) {
+            throw new RuntimeException("Failing job to test resiliency of retry");
+        }
+
+        UUID uuid = UUID.randomUUID();
+        System.out.println("UUID: " + uuid.toString());
+        BackgroundJob.enqueue(uuid, () -> System.out.println("Doing some work: " + entity.getAlias()));
     }
 
     public void doLongRunningJob(String anArgument) {
